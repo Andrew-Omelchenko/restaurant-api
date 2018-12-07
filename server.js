@@ -81,6 +81,7 @@ const database = {
 /register --> POST = user
 /profile/:userId --> GET = user
 /menu --> GET = menu
+/winecard --> GET = wine card
 (END)
 */
 
@@ -178,6 +179,14 @@ app.get('/menu', (req, res) => {
   db
     .select('*')
     .from('menu')
+    .then(menu => res.json(menu))
+    .catch(err => res.status(400).json('error getting a menu'));
+});
+
+app.get('/winecard', (req, res) => {
+  db
+    .select('*')
+    .from('drinks')
     .then(menu => res.json(menu))
     .catch(err => res.status(400).json('error getting a menu'));
 });
