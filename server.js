@@ -56,24 +56,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/static', express.static(__dirname + '/public'));
 
-// Mock data
-const database = {
-  menu: [
-    {
-      id: '0',
-      title: 'Soup'
-    },
-    {
-      id: '1',
-      title: 'Salad'
-    },
-    {
-      id: '2',
-      title: 'coffee'
-    }
-  ]
-};
-
 /*
 (API endpoints)
 / --> GET = Server is working
@@ -82,6 +64,7 @@ const database = {
 /profile/:userId --> GET = user
 /menu --> GET = menu
 /winecard --> GET = wine card
+/hours --> POST = array of hours, reserved for a specific table and date
 (END)
 */
 
@@ -189,6 +172,20 @@ app.get('/winecard', (req, res) => {
     .from('drinks')
     .then(menu => res.json(menu))
     .catch(err => res.status(400).json('error getting a menu'));
+});
+
+app.post('/hours', (req, res) => {
+  console.log('hours');
+  const { tableId, date } = req.body;
+  console.log(tableId, date);
+  db.select('reserved_hour')
+    .from('reservations')
+    .where({
+      'table_id': tableId, 
+      'reserved_date': date
+    })
+    .then(data => res.json(data))
+    .catch(err => res.status(400).json('error getting reserved tables'));
 });
 
 app.listen(3000, () => {
