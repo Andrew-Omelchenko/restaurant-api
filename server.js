@@ -65,6 +65,7 @@ app.use('/static', express.static(__dirname + '/public'));
 /menu --> GET = menu
 /winecard --> GET = wine card
 /hours --> POST = array of hours, reserved for a specific table and date
+/reserve --> POST inserts an array of hours into reservations table
 (END)
 */
 
@@ -186,6 +187,19 @@ app.post('/hours', (req, res) => {
     })
     .then(data => res.json(data))
     .catch(err => res.status(400).json('error getting reserved tables'));
+});
+
+app.post('/reserve', (req, res) => {
+  console.log('reserve');
+  const { email, tableId, date, hours } = req.body;
+  const dataArr = hours.map(element => {
+    return { 'client_email': email, 'table_id': tableId, 'reserved_date': date, 'reserved_hour': element };
+  });
+  console.log(dataArr);
+  db('reservations')
+    .insert(dataArr)
+    .then(data => res.json(data))
+    .catch(err => res.status(400).json('error inserting hours into reservations table'));
 });
 
 app.listen(3000, () => {
