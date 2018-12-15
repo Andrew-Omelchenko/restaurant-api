@@ -66,6 +66,7 @@ app.use('/static', express.static(__dirname + '/public'));
 /winecard --> GET = wine card
 /hours --> POST = array of hours, reserved for a specific table and date
 /reserve --> POST inserts an array of hours into reservations table
+/events --> GET = events array
 (END)
 */
 
@@ -200,6 +201,14 @@ app.post('/reserve', (req, res) => {
     .insert(dataArr)
     .then(data => res.json(data))
     .catch(err => res.status(400).json('error inserting hours into reservations table'));
+});
+
+app.get('/events', (req, res) => {
+  db
+    .select('*')
+    .from('events')
+    .then(menu => res.json(menu))
+    .catch(err => res.status(400).json('error getting a menu'));
 });
 
 app.listen(3000, () => {
