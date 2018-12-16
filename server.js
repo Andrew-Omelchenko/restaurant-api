@@ -67,6 +67,7 @@ app.use('/static', express.static(__dirname + '/public'));
 /hours --> POST = array of hours, reserved for a specific table and date
 /reserve --> POST inserts an array of hours into reservations table
 /events --> GET = events array
+/gallery --> GET = gallery array
 (END)
 */
 
@@ -207,6 +208,14 @@ app.get('/events', (req, res) => {
   db
     .select('*')
     .from('events')
+    .then(menu => res.json(menu))
+    .catch(err => res.status(400).json('error getting a menu'));
+});
+
+app.get('/gallery', (req, res) => {
+  db
+    .select('*')
+    .from('gallery')
     .then(menu => res.json(menu))
     .catch(err => res.status(400).json('error getting a menu'));
 });
